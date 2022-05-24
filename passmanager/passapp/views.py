@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Credentials
 
 # Create your views here.
 
@@ -12,10 +13,10 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username, password)
+        user = authenticate(request, username=username, password=password)
         if user != None:
             login(request, user)
-            return redirect('profile')
+            return redirect('profile', user.pk)
         else:
             messages.error(request, 'Invalid credentials!')
     # otherwise, if user already logged in, just render their profile
@@ -45,8 +46,15 @@ def logout_view(request):
     return redirect('home_login')
 
 
-@login_required(login_url='home_login')
-def profile(request, pk):
+def profile_view(request, pk):
     # grab all the credentials the user stored in the manager, if any
     user = User.objects.get(id=pk)
-    return render(request, 'profile.html')
+    creds = Credentials.objects.filter(user_id=pk)
+    context = {'user':user, 'creds':creds}
+    return render(request, 'profile.html', context)
+
+
+@login_required(login_url='home_login')
+def add_creds_view(request, pk):
+    # if POST, grab the creds the user wants to
+    return render(request, 'add_creds.html')

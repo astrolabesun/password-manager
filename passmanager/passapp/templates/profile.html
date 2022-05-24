@@ -1,13 +1,20 @@
 {% extends 'main.html' %}
 {% block content %}
+<h1>Welcome, {{ user.username }}!</h1>
+<button class="logout"><a href="{% url 'logout' %}">Logout</a></button>
 <h1>All Credentials</h1>
 <div class="container">
+    {% for c in creds %}
     <div class="creds-container">
         <!--
             Display credentials here and the website they are used for.
             If the credentials are expired, display a warning message
             to the user to generate new credentials.
         -->
+        <li>Username: {{ c.username }}</li>
+        <li>Email: {{ c.email_address }}</li>
     </div>
+    {% endfor %}
+    <button class="add-creds-btn"><a href="{% url 'add-creds' user.pk %}">Add New Credentials!</a></button>
 </div>
 {% endblock content %}

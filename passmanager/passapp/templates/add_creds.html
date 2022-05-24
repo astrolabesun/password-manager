@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+{% block content %}
+<button class="go-back"><a href="{% url 'profile' user.pk %}">Go Back to Profile</a></button>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="website" placeholder="Enter the Website these creds are for">
+    <input type="text" name="username" placeholder="Username">
+    <input type="email" name="email" id="email" placeholder="Email">
+    <input type="password" name="password" id="password" placeholder="Password">
+    <input type="checkbox" name="will-expire" id="will-expire" placeholder="My credentials will expire">
+    <input type="datetime" name="expiry-date" id="expiry-date" placeholder="Enter the expiry date and time">
+    <button type="submit">Store my Creds!</button>
+</form>
+{% endblock content %}

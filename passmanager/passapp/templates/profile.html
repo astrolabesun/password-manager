@@ -13,6 +13,8 @@
         -->
         <li>Username: {{ c.username }}</li>
         <li>Email: {{ c.email_address }}</li>
+        <button class="del-creds-btn"><a href="{% url 'delete-creds' c.pk %}">Delete</a></button>
+        <button class="edit-creds-btn"><a href="{% url 'edit-creds' c.pk %}">Edit</a></button>
     </div>
     {% endfor %}
     <button class="add-creds-btn"><a href="{% url 'add-creds' user.pk %}">Add New Credentials!</a></button>

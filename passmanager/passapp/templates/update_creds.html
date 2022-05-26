@@ -1,9 +1,9 @@
 {% extends 'main.html' %}
 {% block content %}
-<button class="go-back"><a href="{% url 'profile' user.pk %}">Go Back to Profile</a></button>
+<button class="go-back"><a href="{% url 'profile' user.pk %}">Go Back</a></button>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Store my Creds!</button>
+    <button class="update-creds">Update!</button>
 </form>
 {% endblock content %}

@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Credentials
+from .forms import CredentialsForm
 
 # Create your views here.
 
@@ -36,7 +37,7 @@ def registration_view(request):
             user = form.save()
             login(request, user)
             # upon registration, take user to their profile page
-            return redirect('profile')
+            return redirect('profile', user.pk)
         else:
             messages.error(request, 'Please give valid info to the form')
     else:
@@ -69,6 +70,50 @@ def add_creds_view(request, pk):
     # if POST, grab the creds the user wants to
     if request.method == "POST":
         # need to make a credentials fill out form
+        creds_form = CredentialsForm(request.POST)
         # save the data to the db, if valid
-        pass
-    return render(request, 'add_creds.html')
+        if creds_form.is_valid():
+            user = User.objects.get(id=pk)
+            if user is not None:
+                # user_id is a required field, so before committing, set it to the current user
+                creds = creds_form.save(commit=False)
+                creds.user_id = user
+                creds.save()
+                return redirect('profile', user.pk)
+            else:
+                messages.error(request, 'Credentials storing failed. User not found')
+    else:
+        creds_form = CredentialsForm()
+    context = {'form':creds_form}
+    return render(request, 'add_creds.html', context)
+
+
+@login_required(login_url='home_login')
+def update_creds_view(request, pk):
+    # make sure the creds belong to the user before updating
+    # grab the credentials in question by its id
+    creds = Credentials.objects.get(pk=pk)
+    if request.method == "POST":
+        if request.user == creds.user_id:
+            # save the changes, take user back to profile
+            form = CredentialsForm(request.POST, instance=creds)
+            if form.is_valid():
+                form.save()
+            return redirect('profile', request.user.pk)
+        else:
+            messages.error(request, 'These are not your credentials!!')
+    else:
+        form = CredentialsForm(instance=creds)
+    context = {'creds':creds, 'form':form}
+    return render(request, 'update_creds.html', context)
+
+
+@login_required(login_url='home_login')
+def delete_creds_view(request, pk):
+    # make sure the creds belong to the user before deleting
+    creds = Credentials.objects.get(pk=pk)
+    if request.user == creds.user_id:
+        creds.delete()
+    else:
+        messages.error(request, 'These are not your credentials!!')
+    return redirect('profile', request.user.pk)

@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -9,6 +10,10 @@ from .models import Credentials
 # Create your views here.
 
 def login_view(request):
+    # if user already authenticated, take them to their profile
+    if request.user.is_authenticated:
+        return redirect('profile', request.user.pk)
+
     # if POST for login, authenticate
     if request.method == 'POST':
         username = request.POST['username']
@@ -19,7 +24,6 @@ def login_view(request):
             return redirect('profile', user.pk)
         else:
             messages.error(request, 'Invalid credentials!')
-    # otherwise, if user already logged in, just render their profile
     # if not logged in, just keep displaying the login form
     return render(request, 'index.html')
 
@@ -46,15 +50,25 @@ def logout_view(request):
     return redirect('home_login')
 
 
+@login_required(login_url='home_login')
 def profile_view(request, pk):
     # grab all the credentials the user stored in the manager, if any
     user = User.objects.get(id=pk)
-    creds = Credentials.objects.filter(user_id=pk)
-    context = {'user':user, 'creds':creds}
-    return render(request, 'profile.html', context)
+    # load user info if the user's stuff belongs to them
+    # and prevent an authenticated user from accessing other users' profiles
+    if request.user == user:
+        creds = Credentials.objects.filter(user_id=pk)
+        context = {'user':user, 'creds':creds}
+        return render(request, 'profile.html', context)
+    else:
+        return HttpResponse('Stay in your profile!')
 
 
 @login_required(login_url='home_login')
 def add_creds_view(request, pk):
     # if POST, grab the creds the user wants to
+    if request.method == "POST":
+        # need to make a credentials fill out form
+        # save the data to the db, if valid
+        pass
     return render(request, 'add_creds.html')

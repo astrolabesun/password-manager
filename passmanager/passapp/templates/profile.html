@@ -4,6 +4,7 @@
 <button class="logout"><a href="{% url 'logout' %}">Logout</a></button>
 <h1>All Credentials</h1>
 <div class="container">
+    {% if creds %}
     {% for c in creds %}
     <div class="creds-container">
         <!--
@@ -17,6 +18,9 @@
         <button class="edit-creds-btn"><a href="{% url 'edit-creds' c.pk %}">Edit</a></button>
     </div>
     {% endfor %}
+    {% else %}
+    <h2>There are no credentials on your account.</h2>
+    {% endif %}
     <button class="add-creds-btn"><a href="{% url 'add-creds' user.pk %}">Add New Credentials!</a></button>
 </div>
 {% endblock content %}

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
@@ -62,7 +62,7 @@ def profile_view(request, pk):
         context = {'user':user, 'creds':creds}
         return render(request, 'profile.html', context)
     else:
-        return HttpResponse('Stay in your profile!')
+        return HttpResponseForbidden('Stay in your profile!')
 
 
 @login_required(login_url='home_login')

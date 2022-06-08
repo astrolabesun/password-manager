@@ -76,6 +76,7 @@ def add_creds_view(request, pk):
             user = User.objects.get(id=pk)
             if user is not None:
                 # user_id is a required field, so before committing, set it to the current user
+                # TODO: find a way to securely store the credentials.
                 creds = creds_form.save(commit=False)
                 creds.user_id = user
                 creds.save()

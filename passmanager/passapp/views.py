@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from Crypto.Random import get_random_bytes
+from Crypto.Hash import SHA384
 from .models import Credentials
 from .forms import CredentialsForm
 
@@ -76,9 +78,20 @@ def add_creds_view(request, pk):
             user = User.objects.get(id=pk)
             if user is not None:
                 # user_id is a required field, so before committing, set it to the current user
-                # TODO: find a way to securely store the credentials.
                 creds = creds_form.save(commit=False)
                 creds.user_id = user
+                '''
+                TODO: Hashing is one-way, so this will prevent me from
+                retrieving the password. I'll have to find
+                a way to securely encrypt, such as AES-GCM.
+
+                # what will my key be?
+                gcm = AES.new(key, GCM, nonce=get_random_bytes(12))
+                creds.password, tag = gcm.encrypt_and_digest(creds.password.encode())
+
+                # to decrypt, I need key, tag, and nonce... Where do I put them?
+                '''
+                creds.password = SHA384.new(creds.password.encode() + get_random_bytes(8)).hexdigest()
                 creds.save()
                 return redirect('profile', user.pk)
             else:
@@ -99,7 +112,10 @@ def update_creds_view(request, pk):
             # save the changes, take user back to profile
             form = CredentialsForm(request.POST, instance=creds)
             if form.is_valid():
-                form.save()
+                new_creds = form.save(commit=False)
+                # TODO: find a way to decrypt password for readability to user.
+                new_creds.password = SHA384.new(new_creds.password.encode() + get_random_bytes(8)).hexdigest()
+                new_creds.save()
             return redirect('profile', request.user.pk)
         else:
             messages.error(request, 'These are not your credentials!!')

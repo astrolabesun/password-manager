@@ -1,5 +1,8 @@
 {% extends 'main.html' %}
 {% block content %}
+<p>
+    Already have an account? <a href="{% url 'home_login' %}">Go Back to Login!</a>
+</p>
 
 <form action="" method="post">
     {% csrf_token %}

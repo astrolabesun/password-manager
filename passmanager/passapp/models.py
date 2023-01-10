@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Credentials(models.Model):
     # one user can store 0 or more creds
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    site_name = models.CharField(max_length=100)
     website = encrypt(models.URLField())
     # credentials can be either an email or username
     email_address = encrypt(models.EmailField(blank=True, null=True))

@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Welcome, {{ user.username }}!</h1>
 <button class="logout"><a href="{% url 'logout' %}">Logout</a></button>
-<h1>All Credentials</h1>
+<h2>All Credentials</h2>
 <div class="container">
     {% if creds %}
     {% for c in creds %}
@@ -12,10 +12,14 @@
             If the credentials are expired, display a warning message
             to the user to generate new credentials.
         -->
-        <li>Username: {{ c.username }}</li>
-        <li>Email: {{ c.email_address }}</li>
-        <button class="del-creds-btn"><a href="{% url 'delete-creds' c.pk %}">Delete</a></button>
-        <button class="edit-creds-btn"><a href="{% url 'edit-creds' c.pk %}">Edit</a></button>
+        <h4>{{ c.site_name }}</h4>
+        <ul>
+            <li>Username: {{ c.username }}</li>
+            <li>Email: {{ c.email_address }}</li>
+            <br>
+            <button class="del-creds-btn"><a href="{% url 'delete-creds' c.pk %}">Delete</a></button>
+            <button class="edit-creds-btn"><a href="{% url 'edit-creds' c.pk %}">Edit</a></button>
+        </ul>
     </div>
     {% endfor %}
     {% else %}

@@ -16,6 +16,9 @@
         <ul>
             <li>Username: {{ c.username }}</li>
             <li>Email: {{ c.email_address }}</li>
+            {% if c.expiry_date %}
+            <li>Expires: {{ c.expiry_date|date:"d-M-Y" }}</li>
+            {% endif %}
             <br>
             <button class="del-creds-btn"><a href="{% url 'delete-creds' c.pk %}">Delete</a></button>
             <button class="edit-creds-btn"><a href="{% url 'edit-creds' c.pk %}">Edit</a></button>

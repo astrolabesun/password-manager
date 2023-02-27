@@ -1,25 +1,52 @@
 * {
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    --btn-colour: #66999b;
+    --shadow-colour: #114b5f;
 }
 
+/* styling elements common to all files */
 ul {
     list-style: none;
+    padding: 0.5rem;
 }
 
 button {
-    background-color: lightseagreen;
+    background-color: var(--btn-colour);
     color: white;
     font-size: 1rem;
     font-weight: 600;
     border-style: none;
     border-radius: 5px;
     padding: 0.5rem;
+    box-shadow: 2px 2px 2px var(--shadow-colour);
 }
 
 a {
     text-decoration: none;
 }
 
-.creds-container {
-    background-color: antiquewhite;
+
+/* styling index.html */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.login-container {
+    padding: 0.5rem;
+    border: solid var(--shadow-colour);
+    box-shadow: 2px 2px 2px var(--shadow-colour);
+}
+
+
+/* styling profile.html */
+.creds-card {
+    border: 2px solid var(--shadow-colour);
+}
+
+.creds-card h4 {
+    font-size: 1.25rem;
+    padding: 0.25rem;
 }

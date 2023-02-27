@@ -67,7 +67,7 @@ def profile_view(request, pk):
 
 @login_required(login_url='home_login')
 def add_creds_view(request, pk):
-    # if POST, grab the creds the user wants to
+    # if POST, grab the data the user added to the form
     if request.method == "POST":
         # need to make a credentials fill out form
         creds_form = CredentialsForm(request.POST)
@@ -93,16 +93,19 @@ def update_creds_view(request, pk):
     # make sure the creds belong to the user before updating
     # grab the credentials in question by its id
     creds = Credentials.objects.get(pk=pk)
+    if request.user.pk != creds.user_id.pk:
+        return HttpResponseForbidden("These are not your credentials!")
+
+    # update
     if request.method == "POST":
-        if request.user == creds.user_id:
-            # save the changes, take user back to profile
-            form = CredentialsForm(request.POST, instance=creds)
-            if form.is_valid():
-                new_creds = form.save(commit=False)
-                new_creds.save()
-            return redirect('profile', request.user.pk)
+        # save the changes, take user back to profile
+        form = CredentialsForm(request.POST, instance=creds)
+        if form.is_valid():
+            new_creds = form.save(commit=False)
+            new_creds.save()
         else:
-            messages.error(request, 'These are not your credentials!!')
+            messages.error("Update failed.")
+        return redirect('profile', request.user.pk)
     else:
         form = CredentialsForm(instance=creds)
     context = {'creds':creds, 'form':form}
@@ -113,8 +116,8 @@ def update_creds_view(request, pk):
 def delete_creds_view(request, pk):
     # make sure the creds belong to the user before deleting
     creds = Credentials.objects.get(pk=pk)
-    if request.user == creds.user_id:
+    if request.user.pk == creds.user_id.pk:
         creds.delete()
     else:
-        messages.error(request, 'These are not your credentials!!')
+        return HttpResponseForbidden("These are not your credentials!")
     return redirect('profile', request.user.pk)

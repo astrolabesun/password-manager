@@ -4,7 +4,7 @@
     --shadow-colour: #114b5f;
 }
 
-/* styling elements common to all files */
+/* styling elements common to multiple files */
 ul {
     list-style: none;
     padding: 0.5rem;
@@ -26,7 +26,11 @@ a {
 }
 
 
-/* styling index.html */
+input {
+    padding: 0.25rem;
+}
+
+
 .container {
     display: flex;
     flex-direction: column;
@@ -34,6 +38,7 @@ a {
     padding: 0.5rem;
 }
 
+/* styling index.html */
 .login-container {
     padding: 0.5rem;
     border: solid var(--shadow-colour);
@@ -49,4 +54,15 @@ a {
 .creds-card h4 {
     font-size: 1.25rem;
     padding: 0.25rem;
+}
+
+
+/* error styling */
+.err-container {
+    color: #fdfdff;
+    background-image: linear-gradient(to right, #da4167, #fdfdff);
+}
+
+.error-span {
+    color: #da4167;
 }

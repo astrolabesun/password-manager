@@ -4,7 +4,65 @@
 <div class="container">
     <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% if form.non_field_errors %}
+        <div class="err-container">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+        <p>
+            {{ form.site_name.label_tag }}
+            <input type="text" name="{{ form.site_name.html_name }}" id="{{ form.site_name.id_for_label }}" value="{{ form.site_name.value }}">
+            {% if form.site_name.errors %}
+                {% for error in form.site_name.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.site_name.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
+        <p>
+            {{ form.website.label_tag }}
+            <input type="url" name="{{ form.website.html_name }}" id="{{ form.website.id_for_label }}" value="{{ form.website.value }}">
+            {% if form.website.errors %}
+                {% for error in form.website.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.website.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
+        <p>
+            <label for="{{ form.email_address.id_for_label }}">(Optional) Email:</label>
+            <input type="email" name="{{ form.email_address.html_name }}" id="{{ form.email_address.id_for_label}}" value="{{ form.email_address.value|default:'' }}">
+            {% if form.email_address.errors %}
+                {% for error in form.email_address.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.email_address.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
+        <p>
+            <label for="{{ form.username.id_for_label }}">(Optional) Username:</label>
+            <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}">
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.username.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
+        <p>
+            {{ form.password.label_tag }}
+            <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" value="{{ form.password.value }}">
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.password.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
+        <p>
+            <label for="{{ form.expiry_date.id_for_label }}">(Optional) Expiry Date:</label>
+            <input type="date" name="{{ form.expiry_date.html_name }}" id="{{ form.expiry_date.id_for_label }}" value="{{ form.expiry_date.value }}">
+            {% if form.expiry_date.errors %}
+                {% for error in form.expiry_date.errors %}
+                <span class="error-span"><i class="fa-solid fa-circle-exclamation"></i> {{ form.expiry_date.label }}: {{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </p>
         <button class="update-creds">Update!</button>
     </form>
 </div>

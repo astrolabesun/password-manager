@@ -4,11 +4,15 @@
 <button class="logout"><a href="{% url 'logout' %}">Logout</a></button>
 
 <div class="creds-container">
-    <h2>All Credentials</h2>
-    <button class="add-creds-btn"><a href="{% url 'add-creds' user.pk %}">Add New Credentials!</a></button>
-    <br>
+    <h2>
+        All Credentials
+        <span class="create-creds">
+            <a href="{% url 'add-creds' user.pk %}"><i class="fa-solid fa-plus"></i></a>
+        </span>
+    </h2>
+
     {% if creds %}
-    {% for c in creds %}
+    {% for c in creds|dictsort:'site_name' %}
     <div class="creds-card">
         <!--
             Display credentials here and the website they are used for.
